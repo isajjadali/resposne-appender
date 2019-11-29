@@ -1,0 +1,11 @@
+{
+  "name": "customize-response-appender",
+  "version": "1.0.3",
+  "description": "append custom methods on res",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sajjad Ali",
+  "license": "ISC"
+}
