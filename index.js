@@ -1,13 +1,24 @@
+import { pathToFileURL } from 'url';
+import {
+  createMethodNameWithRespectiveConfig,
+  methodCreater,
+} from './methods-creator.js';
 
-module.exports = function ({ reponsesConfigFilePath = './responses-config' }) {
-    const responseConfig = require(`${process.cwd()}/${reponsesConfigFilePath}`);
-    const methodsInfo = require('./methods-creator').createMethodNameWithRespectiveConfig(responseConfig);
-    const methods = require('./methods-creator').methodCreater(methodsInfo);
+export default async function ({
+  reponsesConfigFilePath = './responses-config.js',
+}) {
+  const tempPath = pathToFileURL(`${process.cwd()}/${reponsesConfigFilePath}`);
+  const responseConfig = await import(tempPath.href);
 
-    return function (req, res, next) {
-        for (const func in methods) {
-            res[func] = methods[func];
-        }
-        next();
-    };
-};
+  const methodsInfo = createMethodNameWithRespectiveConfig(
+    responseConfig.default
+  );
+  const methods = methodCreater(methodsInfo);
+
+  return function (req, res, next) {
+    for (const func in methods) {
+      res[func] = methods[func];
+    }
+    next();
+  };
+}
